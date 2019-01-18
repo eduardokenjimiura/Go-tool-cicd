@@ -21,16 +21,16 @@ phases:
   build:
     commands:
         - ls
-        - go build -o  main   
+       # - go build -o  main   
         
-        - ./main input.json taskdefinition.json arn:aws:iam::036315699000:role/ecsTaskExecutionRole
-        - cd $CODEBUILD_SRC_DIR_SourceArti
-        - ls
-        - cd ..
-        - cd $CODEBUILD_SRC_DIR_local
-        - ls
+        #- ./main input.json taskdefinition.json arn:aws:iam::036315699000:role/ecsTaskExecutionRole
+        #- cd $CODEBUILD_SRC_DIR_SourceArti
+        #- ls
+        #- cd ..
+        #- cd $CODEBUILD_SRC_DIR_local
+        #- ls
         
-        - echo local
+       # - echo local
        
       # - command
       # - command
