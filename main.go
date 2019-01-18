@@ -18,7 +18,8 @@ func main() {
 
 	var envs []Environment
 	var containerDefinitions []ContainerDefinitions
-
+	var requiresCompatibilities []string
+	requiresCompatibilities = append(requiresCompatibilities, "FARGATE")
 	jsonFile, err := os.Open(os.Args[1])
 	executionRoleArn := os.Args[3]
 	byteValue, _ := ioutil.ReadAll(jsonFile)
@@ -39,23 +40,23 @@ func main() {
 	})
 
 	containerDefinitions = append(containerDefinitions, ContainerDefinitions{
-		Name:         "poc-aws-ci-cd",
-		Image:        "<IMAGE1_NAME>",
+		Name:  "poc-aws-ci-cd",
+		Image: "poc-ci-cd",
+		//Image:        "<IMAGE1_NAME>",
 		Essential:    true,
-		CPU:          256,
-		Memory:       512,
 		PortMappings: portmappings,
 		Environment:  envs,
 	})
 
 	taskdef := Taskdef{
 
-		ExecutionRoleArn:     executionRoleArn,
-		NetworkMode:          "awsvpc",
-		CPU:                  256,
-		Memory:               512,
-		Family:               "ecs-demo",
-		ContainerDefinitions: containerDefinitions,
+		ExecutionRoleArn:        executionRoleArn,
+		NetworkMode:             "awsvpc",
+		CPU:                     "256",
+		Memory:                  "512",
+		Family:                  "ecs-demo",
+		RequiresCompatibilities: requiresCompatibilities,
+		ContainerDefinitions:    containerDefinitions,
 	}
 	json, _ := JSONMarshal(taskdef)
 	//json, _ := json.Marshal(taskdef)
@@ -71,8 +72,6 @@ type ContainerDefinitions struct {
 	Name         string         `json:"name"`
 	Image        string         `json:"image"`
 	Essential    bool           `json:"essential"`
-	CPU          int            `json:"cpu"`
-	Memory       int            `json:"memory"`
 	PortMappings []Portmappings `json:"portMappings"`
 	Environment  []Environment  `json:"environment"`
 }
@@ -90,11 +89,12 @@ type Taskdef struct {
 	ContainerDefinitions    []ContainerDefinitions `json:"containerDefinitions"`
 	RequiresCompatibilities []string               `json:"requiresCompatibilities"`
 	NetworkMode             string                 `json:"networkMode"`
-	CPU                     int                    `json:"cpu"`
-	Memory                  int                    `json:"memory"`
+	CPU                     string                 `json:"cpu"`
+	Memory                  string                 `json:"memory"`
 	Family                  string                 `json:"family"`
 }
 
+// Environment ...
 type Environment struct {
 	Name  string `json:"name"`
 	Value string `json:"value"`
