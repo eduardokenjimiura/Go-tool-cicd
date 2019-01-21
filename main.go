@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"os"
+	"strings"
 )
 
 func JSONMarshal(t interface{}) ([]byte, error) {
@@ -22,7 +23,8 @@ func main() {
 	requiresCompatibilities = append(requiresCompatibilities, "FARGATE")
 	jsonFile, err := os.Open(os.Args[1])
 	executionRoleArn := os.Args[3]
-	image := os.Args[4]
+	image := strings.Replace(os.Args[4], "\"", "", -1)
+	name := os.Args[5]
 	byteValue, _ := ioutil.ReadAll(jsonFile)
 	var result map[string]interface{}
 
@@ -41,7 +43,7 @@ func main() {
 	})
 
 	containerDefinitions = append(containerDefinitions, ContainerDefinitions{
-		Name:  "poc-aws-ci-cd",
+		Name:  name,
 		Image: image,
 		//Image:        "<IMAGE1_NAME>",
 		Essential:    true,
