@@ -22,6 +22,7 @@ func main() {
 	requiresCompatibilities = append(requiresCompatibilities, "FARGATE")
 	jsonFile, err := os.Open(os.Args[1])
 	executionRoleArn := os.Args[3]
+	image := os.Args[4]
 	byteValue, _ := ioutil.ReadAll(jsonFile)
 	var result map[string]interface{}
 
@@ -41,7 +42,7 @@ func main() {
 
 	containerDefinitions = append(containerDefinitions, ContainerDefinitions{
 		Name:  "poc-aws-ci-cd",
-		Image: "poc-ci-cd",
+		Image: image,
 		//Image:        "<IMAGE1_NAME>",
 		Essential:    true,
 		PortMappings: portmappings,
