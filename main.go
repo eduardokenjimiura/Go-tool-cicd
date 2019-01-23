@@ -21,16 +21,15 @@ func main() {
 	var containerDefinitions []ContainerDefinitions
 	var requiresCompatibilities []string
 	requiresCompatibilities = append(requiresCompatibilities, "FARGATE")
-	jsonFile, err := os.Open(os.Args[1])
-	executionRoleArn := os.Args[3]
-	image := strings.Replace(os.Args[4], "\"", "", -1)
-	name := os.Args[5]
-	byteValue, _ := ioutil.ReadAll(jsonFile)
+	jsonFile := os.Getenv("path")
+
+	executionRoleArn := os.Getenv("executionRoleArn")
+	image := strings.Replace(os.Getenv("imageID"), "\"", "", -1)
+	name := os.Getenv("name")
+	//byteValue, _ := ioutil.ReadAll(jsonFile)
 	var result map[string]interface{}
 
-	json.Unmarshal(byteValue, &result)
-
-	defer jsonFile.Close()
+	json.Unmarshal([]byte(jsonFile), &result)
 
 	for k, v := range result {
 		envs = append(envs, Environment{Name: k, Value: v.(string)})
@@ -63,11 +62,12 @@ func main() {
 	}
 	json, _ := JSONMarshal(taskdef)
 	//json, _ := json.Marshal(taskdef)
-	err = ioutil.WriteFile(os.Args[2], json, 0644)
+	err := ioutil.WriteFile("teste.json", json, 0644)
 	if err != nil {
 		panic(err)
 	}
-
+	// for {
+	// }
 }
 
 // ContainerDefinitions ...
