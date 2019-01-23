@@ -22,7 +22,6 @@ func main() {
 	var requiresCompatibilities []string
 	requiresCompatibilities = append(requiresCompatibilities, "FARGATE")
 	jsonFile := os.Getenv("path")
-
 	executionRoleArn := os.Getenv("executionRoleArn")
 	image := strings.Replace(os.Getenv("imageID"), "\"", "", -1)
 	name := os.Getenv("name")
