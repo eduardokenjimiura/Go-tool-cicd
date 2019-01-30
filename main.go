@@ -47,6 +47,7 @@ func main() {
 		Essential:    true,
 		PortMappings: portmappings,
 		Environment:  envs,
+		CPU:          "256",
 	})
 
 	taskdef := Taskdef{
@@ -76,6 +77,7 @@ type ContainerDefinitions struct {
 	Essential    bool           `json:"essential"`
 	PortMappings []Portmappings `json:"portMappings"`
 	Environment  []Environment  `json:"environment"`
+	CPU          string         `json:"cpu"`
 }
 
 // Portmappings ...
