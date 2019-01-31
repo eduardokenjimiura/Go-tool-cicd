@@ -18,13 +18,17 @@ func JSONMarshal(t interface{}) ([]byte, error) {
 func main() {
 
 	var envs []Environment
-	var containerDefinitions []ContainerDefinitions
 	var requiresCompatibilities []string
 	requiresCompatibilities = append(requiresCompatibilities, "FARGATE")
 	jsonFile := os.Getenv("path")
-	executionRoleArn := os.Getenv("executionRoleArn")
 	image := strings.Replace(os.Getenv("imageID"), "\"", "", -1)
-	name := os.Getenv("name")
+
+	taskOldFile := os.Getenv("taskold")
+
+	var oldTaskDefinition Taskdef
+
+	json.Unmarshal([]byte(taskOldFile), &oldTaskDefinition)
+
 	//byteValue, _ := ioutil.ReadAll(jsonFile)
 	var result map[string]interface{}
 
@@ -33,41 +37,16 @@ func main() {
 	for k, v := range result {
 		envs = append(envs, Environment{Name: k, Value: v.(string)})
 	}
-	var portmappings []Portmappings
-	portmappings = append(portmappings, Portmappings{
-		HostPort:      80,
-		Protocol:      "tcp",
-		ContainerPort: 80,
-	})
 
-	containerDefinitions = append(containerDefinitions, ContainerDefinitions{
-		Name:  name,
-		Image: image,
-		//Image:        "<IMAGE1_NAME>",
-		Essential:    true,
-		PortMappings: portmappings,
-		Environment:  envs,
-		CPU:          256,
-	})
-
-	taskdef := Taskdef{
-
-		ExecutionRoleArn:        executionRoleArn,
-		NetworkMode:             "awsvpc",
-		CPU:                     "256",
-		Memory:                  "512",
-		Family:                  "ecs-demo",
-		RequiresCompatibilities: requiresCompatibilities,
-		ContainerDefinitions:    containerDefinitions,
-	}
-	json, _ := JSONMarshal(taskdef)
+	oldTaskDefinition.ContainerDefinitions[0].Environment = envs
+	oldTaskDefinition.ContainerDefinitions[0].Image = image
+	json, _ := JSONMarshal(oldTaskDefinition)
 	//json, _ := json.Marshal(taskdef)
 	err := ioutil.WriteFile("teste.json", json, 0644)
 	if err != nil {
 		panic(err)
 	}
-	// for {
-	// }
+
 }
 
 // ContainerDefinitions ...
