@@ -25,7 +25,7 @@ func main() {
 
 	taskOldFile := os.Getenv("taskold")
 
-	var oldTaskDefinition Taskdef
+	var oldTaskDefinition Conf
 
 	json.Unmarshal([]byte(taskOldFile), &oldTaskDefinition)
 
@@ -38,15 +38,20 @@ func main() {
 		envs = append(envs, Environment{Name: k, Value: v.(string)})
 	}
 
-	oldTaskDefinition.ContainerDefinitions[0].Environment = envs
-	oldTaskDefinition.ContainerDefinitions[0].Image = image
-	json, _ := JSONMarshal(oldTaskDefinition)
+	oldTaskDefinition.TaskDefinition.ContainerDefinitions[0].Environment = envs
+	oldTaskDefinition.TaskDefinition.ContainerDefinitions[0].Image = image
+	json, _ := JSONMarshal(oldTaskDefinition.TaskDefinition)
 	//json, _ := json.Marshal(taskdef)
 	err := ioutil.WriteFile("teste.json", json, 0644)
 	if err != nil {
 		panic(err)
 	}
 
+}
+
+// Conf ...
+type Conf struct {
+	TaskDefinition Taskdef `json:"taskDefinition"`
 }
 
 // ContainerDefinitions ...
